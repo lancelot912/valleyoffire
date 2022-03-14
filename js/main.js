@@ -145,7 +145,7 @@ var makePopUpContent = function (props) {
 }
 
 // urls to get layer from carto
-var callsite = "https://mlazarte.carto.com:443/api/v2/sql?q=";
+var callsite = "https://mlazarte.carto.com:443/api/v2/sql?q=select * from mlazarte.vof_points";
 var url3 = callsite + sqlQuery3;
 var url4 = callsite + sqlQuery4;
 var url5 = callsite + sqlQuery5;
