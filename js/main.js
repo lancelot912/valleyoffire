@@ -45,7 +45,7 @@ var baseMaps = {
 
 // sql queries to get layers
 
-var sqlQuery1 = "SELECT t.the_geom, t.class, t.trail_id, t.name, t.meters, t.miles, t.trail_surf, u.first_name, u.last_name, u.trail_id, u.user_date, u.review FROM mlazarte.vof_trailss AS t LEFT OUTER JOIN mlazarte.user_review AS u ON t.trail_id = u.trail_id";
+var sqlQuery1 = "SELECT t.the_geom, t.class, t.trail_id, t.name, t.meters, t.miles, t.trail_surf, u.first_name, u.last_name, u.trail_id, u.user_date, u.review FROM mlazarte.vof_trails AS t LEFT OUTER JOIN mlazarte.user_review AS u ON t.trail_id = u.trail_id";
 // var sqlQuery2 = "SELECT * FROM mlazarte.vof_roads"; // roads
 var sqlQuery3 = "SELECT * FROM mlazarte. vof_points WHERE poitype = 'Campground'";
 var sqlQuery4 = "SELECT * FROM mlazarte. vof_points WHERE poitype = 'Entrance Station'";
@@ -636,7 +636,7 @@ $(document).ready(function () {
         //        "WHERE miles = 'distanceRange'"
 
 
-        var sqlFilter = "SELECT t.the_geom, t.name, t.meters, t.miles, t.trail_surf, u.first_name, u.last_name, u.trail_id, u.user_date, u.review FROM mlazarte.vof_trailss AS t LEFT OUTER JOIN mlazarte.user_review AS u ON t.trail_id = u.trail_id"
+        var sqlFilter = "SELECT t.the_geom, t.name, t.meters, t.miles, t.trail_surf, u.first_name, u.last_name, u.trail_id, u.user_date, u.review FROM mlazarte.vof_trails AS t LEFT OUTER JOIN mlazarte.user_review AS u ON t.trail_id = u.trail_id"
 
 
 
