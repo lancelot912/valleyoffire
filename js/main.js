@@ -47,20 +47,20 @@ var baseMaps = {
 
 var sqlQuery1 = "SELECT t.the_geom, t.class, t.trail_id, t.name, t.meters, t.miles, t.trail_surf, u.first_name, u.last_name, u.trail_id, u.user_date, u.review FROM mlazarte.vof_trailss AS t LEFT OUTER JOIN mlazarte.user_review AS u ON t.route_no = u.trail_id";
 // var sqlQuery2 = "SELECT * FROM mlazarte.vof_roads"; // roads
-var sqlQuery3 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Campground'";
-var sqlQuery4 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Entrance Station'";
-var sqlQuery5 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Gift Shop'";
-var sqlQuery6 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Entrance Station'";
-var sqlQuery7 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Mobile Service'";
-var sqlQuery8 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Parking'";
-var sqlQuery9 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Petroglyphics'";
-var sqlQuery10 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Picnic Area'";
-var sqlQuery11 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Restrooms'";
-var sqlQuery12 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Showers'";
-var sqlQuery13 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Trailhead'";
-var sqlQuery14 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Viewpoint'";
-var sqlQuery15 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Visitor Center'";
-var sqlQuery16 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Water Station'";
+var sqlQuery3 = "SELECT * FROM mlazarte. vof_points WHERE poitype = 'Campground'";
+var sqlQuery4 = "SELECT * FROM mlazarte. vof_points WHERE poitype = 'Entrance Station'";
+var sqlQuery5 = "SELECT * FROM mlazarte. vof_points WHERE poitype = 'Gift Shop'";
+var sqlQuery6 = "SELECT * FROM mlazarte. vof_points WHERE poitype = 'Entrance Station'";
+var sqlQuery7 = "SELECT * FROM mlazarte. vof_points WHERE poitype = 'Mobile Service'";
+var sqlQuery8 = "SELECT * FROM mlazarte. vof_points WHERE poitype = 'Parking'";
+var sqlQuery9 = "SELECT * FROM mlazarte. vof_points WHERE poitype = 'Petroglyphics'";
+var sqlQuery10 = "SELECT * FROM mlazarte. vof_points WHERE poitype = 'Picnic Area'";
+var sqlQuery11 = "SELECT * FROM mlazarte. vof_points WHERE poitype = 'Restrooms'";
+var sqlQuery12 = "SELECT * FROM mlazarte. vof_points WHERE poitype = 'Showers'";
+var sqlQuery13 = "SELECT * FROM mlazarte. vof_points WHERE poitype = 'Trailhead'";
+var sqlQuery14 = "SELECT * FROM mlazarte. vof_points WHERE poitype = 'Viewpoint'";
+var sqlQuery15 = "SELECT * FROM mlazarte. vof_points WHERE poitype = 'Visitor Center'";
+var sqlQuery16 = "SELECT * FROM mlazarte. vof_points WHERE poitype = 'Water Station'";
 //sql for dropdown list
 var sqlQueryddl = "SELECT route_no, name FROM mlazarte.vof_trails"; // trails 
 //icons 
@@ -140,7 +140,7 @@ var onEachFeature = function (feature, layer) {
 // function to make our popup-content
 var makePopUpContent = function (props) {
     return '<div class="popup-content">' +
-        '<p><strong>Name:</strong> ' + props.poilabel + '</p>' +
+        '<p><strong>Name:</strong> ' + props.name + '</p>' +
         '</div>'
 }
 
@@ -504,7 +504,7 @@ var locateControl = L.control.locate({
 
 
 function getsearchdata() {
-    var sqlSer = "SELECT poilabel, poitype, the_geom FROM mlazarte.vof_poi WHERE poitype IN ('Campground', 'Entrance Station', 'Gift Shop','Parking','Picnic Area','Restrooms','Trailhead', 'Viewpoint','Visitor Center')";
+    var sqlSer = "SELECT name, poitype, the_geom FROM mlazarte. vof_points WHERE poitype IN ('Campground', 'Entrance Station', 'Gift Shop','Parking','Picnic Area','Restrooms','Trailhead', 'Viewpoint','Visitor Center')";
     var searchLayer = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=" + sqlSer, function (data) {
         return L.geoJson(data);
         console.log(L.geoJson(data));
@@ -514,7 +514,7 @@ function getsearchdata() {
 
 map.addControl(new L.Control.Search({
     sourceData: getsearchdata,
-    propertyName: 'poilabel',
+    propertyName: 'name',
     textPlaceholder: 'Search for Point of Interests',
     markerLocation: true
 }));
