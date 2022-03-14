@@ -26,7 +26,7 @@ var mapOptions = {
     zoom: 13,
     minZoom: 3,
     maxZoom: 18,
-    layers: [imagery]
+    layers: [outdoors]
 };
 
 var map = L.map('mapid', mapOptions);
