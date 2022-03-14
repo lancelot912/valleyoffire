@@ -26,7 +26,7 @@ var mapOptions = {
     zoom: 13,
     minZoom: 3,
     maxZoom: 18,
-    layers: [outdoors]
+    layers: [imagery]
 };
 
 var map = L.map('mapid', mapOptions);
@@ -45,25 +45,24 @@ var baseMaps = {
 
 // sql queries to get layers
 
-var sqlQuery1 = "SELECT t.the_geom, t.class, t.route_no, t.name, t.meters, t.miles, t.trlname,t.trllabel, t.trlsurface, t.trlclass, u.first_name, u.last_name, u.trail_id, u.user_date, u.review FROM lancelot912.gnp_trailss AS t LEFT OUTER JOIN lancelot912.user_review AS u ON t.route_no = u.trail_id";
-//var sqlQuery1 = "SELECT * FROM lancelot912.gnp_trailss"; // trails 
-var sqlQuery2 = "SELECT * FROM lancelot912.gnp_roads"; // roads
-var sqlQuery3 = "SELECT * FROM lancelot912.gnp_poi WHERE poitype = 'Campground'";
-var sqlQuery4 = "SELECT * FROM lancelot912.gnp_poi WHERE poitype = 'Entrance Station'";
-var sqlQuery5 = "SELECT * FROM lancelot912.gnp_poi WHERE poitype = 'Gift Shop'";
-var sqlQuery6 = "SELECT * FROM lancelot912.gnp_poi WHERE poitype = 'Entrance Station'";
-var sqlQuery7 = "SELECT * FROM lancelot912.gnp_poi WHERE poitype = 'Mobile Service'";
-var sqlQuery8 = "SELECT * FROM lancelot912.gnp_poi WHERE poitype = 'Parking'";
-var sqlQuery9 = "SELECT * FROM lancelot912.gnp_poi WHERE poitype = 'Petroglyphics'";
-var sqlQuery10 = "SELECT * FROM lancelot912.gnp_poi WHERE poitype = 'Picnic Area'";
-var sqlQuery11 = "SELECT * FROM lancelot912.gnp_poi WHERE poitype = 'Restrooms'";
-var sqlQuery12 = "SELECT * FROM lancelot912.gnp_poi WHERE poitype = 'Showers'";
-var sqlQuery13 = "SELECT * FROM lancelot912.gnp_poi WHERE poitype = 'Trailhead'";
-var sqlQuery14 = "SELECT * FROM lancelot912.gnp_poi WHERE poitype = 'Viewpoint'";
-var sqlQuery15 = "SELECT * FROM lancelot912.gnp_poi WHERE poitype = 'Visitor Center'";
-var sqlQuery16 = "SELECT * FROM lancelot912.gnp_poi WHERE poitype = 'Water Station'";
+var sqlQuery1 = "SELECT t.the_geom, t.class, t.trail_id, t.name, t.meters, t.miles, t.trail_surf, u.first_name, u.last_name, u.trail_id, u.user_date, u.review FROM mlazarte.vof_trailss AS t LEFT OUTER JOIN mlazarte.user_review AS u ON t.route_no = u.trail_id";
+// var sqlQuery2 = "SELECT * FROM mlazarte.vof_roads"; // roads
+var sqlQuery3 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Campground'";
+var sqlQuery4 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Entrance Station'";
+var sqlQuery5 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Gift Shop'";
+var sqlQuery6 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Entrance Station'";
+var sqlQuery7 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Mobile Service'";
+var sqlQuery8 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Parking'";
+var sqlQuery9 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Petroglyphics'";
+var sqlQuery10 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Picnic Area'";
+var sqlQuery11 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Restrooms'";
+var sqlQuery12 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Showers'";
+var sqlQuery13 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Trailhead'";
+var sqlQuery14 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Viewpoint'";
+var sqlQuery15 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Visitor Center'";
+var sqlQuery16 = "SELECT * FROM mlazarte.vof_poi WHERE poitype = 'Water Station'";
 //sql for dropdown list
-var sqlQueryddl = "SELECT route_no, trllabel FROM lancelot912.gnp_trailss"; // trails 
+var sqlQueryddl = "SELECT route_no, name FROM mlazarte.vof_trails"; // trails 
 //icons 
 
 
@@ -80,9 +79,6 @@ var iconTemp2 = L.Icon.extend({
     }
 });
 
-var cabinIcon = new iconTemp({
-    iconUrl: 'images/cabin.svg'
-});
 var campIcon = new iconTemp({
     iconUrl: 'images/campground.svg'
 });
@@ -149,7 +145,7 @@ var makePopUpContent = function (props) {
 }
 
 // urls to get layer from carto
-var callsite = "https://lancelot912.carto.com/api/v2/sql?format=GeoJSON&q=";
+var callsite = "https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=";
 var url3 = callsite + sqlQuery3;
 var url4 = callsite + sqlQuery4;
 var url5 = callsite + sqlQuery5;
@@ -355,10 +351,10 @@ $.getJSON(url15, function (data) {
 
 
 // Get trails selection as GeoJSON and Add to Map
-var trails = $.getJSON("https://lancelot912.carto.com/api/v2/sql?format=GeoJSON&q=" + sqlQuery1, function (data) {
+var trails = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=" + sqlQuery1, function (data) {
     trails = L.geoJson(data, {
         onEachFeature: function (feature, layer) {
-            layer.bindPopup('<p><b>' + feature.properties.trllabel + '</b><br/><em>' + 'Surface Type: ' + feature.properties.trlsurface + '<br/><em>' + 'Trail Level: ' + feature.properties.trlclass + '<br/><em>' + 'Miles: ' + feature.properties.miles + '<br/><em>' + 'Reviews: ' + feature.properties.user_date + ': ' + feature.properties.review + '</p>');
+            layer.bindPopup('<p><b>' + feature.properties.name + '</b><br/><em>' + 'Surface Type: ' + feature.properties.trail_surf + '<br/><em>' + 'Miles: ' + feature.properties.miles + '<br/><em>' + 'Reviews: ' + feature.properties.user_date + ': ' + feature.properties.review + '</p>');
             layer.on({
                 mouseover: function (e) {
                     layer.setStyle({
@@ -382,7 +378,7 @@ var trails = $.getJSON("https://lancelot912.carto.com/api/v2/sql?format=GeoJSON&
 
 
 function styleTrails(feature) {
-    type = feature.properties.trlsurface;
+    type = feature.properties.trail_surf;
     var colorToUse;
     if (type === "Sand/Soil") colorToUse = 'green';
     else if (type === "Sand") colorToUse = 'gold';
@@ -408,7 +404,7 @@ function styleFilterTrails(feature) {
     };
 }
 
-var roads = $.getJSON("https://lancelot912.carto.com/api/v2/sql?format=GeoJSON&q=" + sqlQuery2, function (data) {
+/*  var roads = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=" + sqlQuery2, function (data) {
     roads = L.geoJson(data, {
         onEachFeature: function (feature, layer) {
             layer.bindPopup('<p><b>' + feature.properties.rdlabel + '</b><br /><em>' + 'Surface Type: ' + feature.properties.rdsurface + '</p>');
@@ -431,7 +427,7 @@ var roads = $.getJSON("https://lancelot912.carto.com/api/v2/sql?format=GeoJSON&q
         },
         style: styleRoads,
     }).addTo(map);
-});
+}); 
 
 function styleRoads(feature) {
     type = feature.properties.rdsurface;
@@ -445,29 +441,28 @@ function styleRoads(feature) {
         "fillColor": colorToUse,
         "weight": 2,
     };
-}
+} */
 
 var groupedOverlays = {
     "Park Amenities": {
-        "<img src='images/entrance.svg' width='24' height='28'>&nbsp;Entrance Station": entranceStation,
-        "<img src='images/water.svg' width='24' height='28'>&nbsp;Water Station": waterStation,
-        "<img src='images/mobile.svg' width='24' height='28'>&nbsp;Mobile Service": mobileservice,
-        "<img src='images/giftshop.svg' width='24' height='28'>&nbsp;Gift Shop": giftShop,
-        "<img src='images/picnic.svg' width='24' height='28'>&nbsp;Picnic Area": picnicArea,
-        "<img src='images/showers.svg' width='24' height='28'>&nbsp;Showers": showers,
-        "<img src='images/restroom.svg' width='24' height='28'>&nbsp;Restroom": restroom,
-        "<img src='images/visitor.svg' width='24' height='28'>&nbsp;Visitor Center": visitorCenter
+        "<img src='images/entrance.svg' width='24' height='28'> Entrance Station": entranceStation,
+        "<img src='images/water.svg' width='24' height='28'> Water Station": waterStation,
+        "<img src='images/mobile.svg' width='24' height='28'> Mobile Service": mobileservice,
+        "<img src='images/giftshop.svg' width='24' height='28'> Gift Shop": giftShop,
+        "<img src='images/picnic.svg' width='24' height='28'> Picnic Area": picnicArea,
+        "<img src='images/showers.svg' width='24' height='28'> Showers": showers,
+        "<img src='images/restroom.svg' width='24' height='28'> Restroom": restroom,
+        "<img src='images/visitor.svg' width='24' height='28'> Visitor Center": visitorCenter
     },
 
     "Trail Points of Interest": {
-        "<img src='images/cabin.svg' width='24' height='28'>&nbsp;Cabin": cabins,
-        "<img src='images/campground.svg' width='24' height='28'>&nbsp;Campgrounds": campgrounds,
-        "<img src='images/trailhead.svg' width='24' height='28'>&nbsp;Trailheads": trailheads,
-        "<img src='images/viewpoint.svg' width='24' height='28'>&nbsp;View Point": viewpoint,
+        "<img src='images/campground.svg' width='24' height='28'> Campgrounds": campgrounds,
+        "<img src='images/trailhead.svg' width='24' height='28'> Trailheads": trailheads,
+        "<img src='images/viewpoint.svg' width='24' height='28'> View Point": viewpoint,
     },
 
     "Transit": {
-        "<img src='images/parking.svg' width='24' height='28'>&nbsp;Parking": parking
+        "<img src='images/parking.svg' width='24' height='28'> Parking": parking
     }
 };
 
@@ -509,8 +504,8 @@ var locateControl = L.control.locate({
 
 
 function getsearchdata() {
-    var sqlSer = "SELECT poilabel, poitype, the_geom FROM lancelot912.gnp_poi WHERE poitype IN ('Amphitheater','Boat Launch', 'Bus Stop / Shuttle Stop','Cabin','Campground', 'Entrance Station', 'Food Service', 'Gas Station','Gift Shop','Horseback Riding','Lodging','Parking','Picnic Area','Post Office','Ranger Station','Restroom','Trailhead', 'Train Station','Viewpoint','Visitor Center')";
-    var searchLayer = $.getJSON("https://lancelot912.carto.com/api/v2/sql?format=GeoJSON&q=" + sqlSer, function (data) {
+    var sqlSer = "SELECT poilabel, poitype, the_geom FROM mlazarte.vof_poi WHERE poitype IN ('Campground', 'Entrance Station', 'Gift Shop','Parking','Picnic Area','Restrooms','Trailhead', 'Viewpoint','Visitor Center')";
+    var searchLayer = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=" + sqlSer, function (data) {
         return L.geoJson(data);
         console.log(L.geoJson(data));
     });
@@ -583,12 +578,12 @@ $(document).ready(function () {
     });
 
     var ddlTrails = document.getElementById("ddlTrails")
-    $.get("https://lancelot912.carto.com/api/v2/sql?q=" + sqlQueryddl,
+    $.get("https://mlazarte.carto.com/api/v2/sql?q=" + sqlQueryddl,
         function (data) {
             console.log(data);
             for (i = 0; i < data.total_rows; i++) {
                 var option = document.createElement("OPTION");
-                option.innerHTML = data.rows[i].trllabel;
+                option.innerHTML = data.rows[i].name;
 
                 //Set route_no in Value part.
                 option.value = data.rows[i].route_no;
@@ -611,9 +606,9 @@ $(document).ready(function () {
         var userDate = x[3].value;
         var fn = x[1].value;
         var ln = x[2].value;
-        var sqlReview = "INSERT INTO lancelot912.user_review(trail_id, review, user_date, first_name, last_name) VALUES(" + trailID + ", '" + review_ + "' , '" + userDate + "' , '" + fn + "' ,'" + ln + "')";
+        var sqlReview = "INSERT INTO mlazarte.user_review(trail_id, review, user_date, first_name, last_name) VALUES(" + trailID + ", '" + review_ + "' , '" + userDate + "' , '" + fn + "' ,'" + ln + "')";
 
-        var posting = $.post("https://lancelot912.carto.com/api/v2/sql?q=" + sqlReview).done(function () {
+        var posting = $.post("https://mlazarte.carto.com/api/v2/sql?q=" + sqlReview).done(function () {
             alert("Your review has been submitted!")
             // Reset the form
             $("#review_trails_form")[0].reset();
@@ -634,18 +629,14 @@ $(document).ready(function () {
 
         var surfaceType = x[0].value;
         console.log(surfaceType);
-        //        "WHERE trlsurface = 'surfaceType'"
+        //        "WHERE trail_surf = 'surfaceType'"
 
-        var classType = x[1].value;
-        console.log(classType);
-        //        "WHERE trlclass LIKE 'classType'"
-
-        var distanceRange = x[2].value;
+         var distanceRange = x[1].value;
         console.log(distanceRange);
-        //        "WHERE miles distanceRange"
+        //        "WHERE miles = 'distanceRange'"
 
 
-        var sqlFilter = "SELECT t.the_geom, t.class, t.route_no, t.name, t.meters, t.miles, t.trlname,t.trllabel, t.trlsurface, t.trlclass, u.first_name, u.last_name, u.trail_id, u.user_date, u.review FROM lancelot912.gnp_trailss AS t LEFT OUTER JOIN lancelot912.user_review AS u ON t.route_no = u.trail_id"
+        var sqlFilter = "SELECT t.the_geom, t.class, t.route_no, t.name, t.meters, t.miles, t.trail_surf, u.first_name, u.last_name, u.trail_id, u.user_date, u.review FROM mlazarte.vof_trailss AS t LEFT OUTER JOIN mlazarte.user_review AS u ON t.route_no = u.trail_id"
 
 
 
@@ -660,18 +651,10 @@ $(document).ready(function () {
             var sql = sqlFilter + " WHERE ";
             // If surface type is not null, add surfaceType to WHERE clause
             if (surfaceType != "") {
-                var where_surface = "t.trlsurface = '" + surfaceType + "'";
+                var where_surface = "t.trail_surf = '" + surfaceType + "'";
                 sql += where_surface;
             }
-            // If classType is not null, add classType to WHERE clause
-            if (classType != "") {
-                var where_class = "t.trlclass LIKE '" + classType + "'";
-                if (surfaceType != "") {
-                    sql += " AND " + where_class;
-                } else {
-                    sql += where_class;
-                }
-            }
+
             // If distanceRange is not null, add distanceRange to WHERE clause
             if (distanceRange != "") {
                 var where_dist = "t.miles " + distanceRange;
@@ -684,13 +667,13 @@ $(document).ready(function () {
         }
         console.log(sql);
 
-        var filterTrails = $.getJSON("https://lancelot912.carto.com/api/v2/sql?format=GeoJSON&q=" + sql, function (data) {
+        var filterTrails = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=" + sql, function (data) {
             trails = L.geoJson(data, {
                 onEachFeature: function (feature, layer) {
                     console.log(feature);
                     console.log(feature.properties);
-                    layer.bindPopup('<p><b>' + feature.properties.trllabel + '</b><br/><em>' + 'Surface Type: ' + feature.properties.trlsurface + '<br/><em>' + 'Trail Level: ' + feature.properties.trlclass + '<br/><em>' + 'Miles: ' + feature.properties.miles + '<br/><em>' + 'Reviews: ' + feature.properties.user_date + ': ' + feature.properties.review + '</p>');
-                    $('#trailFiltOutput').append('<p class="trail-filter">' + feature.properties.trllabel + '</p>')
+                    layer.bindPopup('<p><b>' + feature.properties.name + '</b><br/><em>' + 'Surface Type: ' + feature.properties.trail_surf + '<br/><em>' + 'Miles: ' + feature.properties.miles + '<br/><em>' + 'Reviews: ' + feature.properties.user_date + ': ' + feature.properties.review + '</p>');
+                    $('#trailFiltOutput').append('<p class="trail-filter">' + feature.properties.name + '</p>')
                     layer.on({
                         mouseover: function (e) {
                             layer.setStyle({
