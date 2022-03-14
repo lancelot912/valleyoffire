@@ -45,7 +45,7 @@ var baseMaps = {
 
 // sql queries to get layers
 
-var sqlQuery1 = "SELECT t.the_geom, t.class, t.trail_id, t.name, t.meters, t.miles, t.trail_surf, u.first_name, u.last_name, u.trail_id, u.user_date, u.review FROM mlazarte.vof_trailss AS t LEFT OUTER JOIN mlazarte.user_review AS u ON t.route_no = u.trail_id";
+var sqlQuery1 = "SELECT t.the_geom, t.class, t.trail_id, t.name, t.meters, t.miles, t.trail_surf, u.first_name, u.last_name, u.trail_id, u.user_date, u.review FROM mlazarte.vof_trailss AS t LEFT OUTER JOIN mlazarte.user_review AS u ON t.trail_id = u.trail_id";
 // var sqlQuery2 = "SELECT * FROM mlazarte.vof_roads"; // roads
 var sqlQuery3 = "SELECT * FROM mlazarte. vof_points WHERE poitype = 'Campground'";
 var sqlQuery4 = "SELECT * FROM mlazarte. vof_points WHERE poitype = 'Entrance Station'";
@@ -62,7 +62,7 @@ var sqlQuery14 = "SELECT * FROM mlazarte. vof_points WHERE poitype = 'Viewpoint'
 var sqlQuery15 = "SELECT * FROM mlazarte. vof_points WHERE poitype = 'Visitor Center'";
 var sqlQuery16 = "SELECT * FROM mlazarte. vof_points WHERE poitype = 'Water Station'";
 //sql for dropdown list
-var sqlQueryddl = "SELECT route_no, name FROM mlazarte.vof_trails"; // trails 
+var sqlQueryddl = "SELECT trail_id, name FROM mlazarte.vof_trails"; // trails 
 //icons 
 
 
@@ -586,7 +586,7 @@ $(document).ready(function () {
                 option.innerHTML = data.rows[i].name;
 
                 //Set route_no in Value part.
-                option.value = data.rows[i].route_no;
+                option.value = data.rows[i].trail_id;
 
                 //Add the Option element to DropDownList.
                 ddlTrails.options.add(option);
@@ -636,7 +636,7 @@ $(document).ready(function () {
         //        "WHERE miles = 'distanceRange'"
 
 
-        var sqlFilter = "SELECT t.the_geom, t.class, t.route_no, t.name, t.meters, t.miles, t.trail_surf, u.first_name, u.last_name, u.trail_id, u.user_date, u.review FROM mlazarte.vof_trailss AS t LEFT OUTER JOIN mlazarte.user_review AS u ON t.route_no = u.trail_id"
+        var sqlFilter = "SELECT t.the_geom, t.name, t.meters, t.miles, t.trail_surf, u.first_name, u.last_name, u.trail_id, u.user_date, u.review FROM mlazarte.vof_trailss AS t LEFT OUTER JOIN mlazarte.user_review AS u ON t.trail_id = u.trail_id"
 
 
 
