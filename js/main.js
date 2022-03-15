@@ -145,7 +145,7 @@ var makePopUpContent = function (props) {
 }
 
 // urls to get layer from carto
-var callsite = "https://mlazarte.carto.com:443/api/v2/sql?q=select * from mlazarte.vof_points";
+var callsite = "https://mlazarte.carto.com/api/v2/sql?q=select * from mlazarte.vof_points";
 var url3 = callsite + sqlQuery3;
 var url4 = callsite + sqlQuery4;
 var url5 = callsite + sqlQuery5;
@@ -351,7 +351,7 @@ $.getJSON(url15, function (data) {
 
 
 // Get trails selection as GeoJSON and Add to Map
-var trails = $.getJSON("https://mlazarte.carto.com:443/api/v2/sql?q=select * from mlazarte.vof_trails" + sqlQuery1, function (data) {
+var trails = $.getJSON("https://mlazarte.carto.com/api/v2/sql?q=select * from mlazarte.vof_trails" + sqlQuery1, function (data) {
     trails = L.geoJson(data, {
         onEachFeature: function (feature, layer) {
             layer.bindPopup('<p><b>' + feature.properties.name + '</b><br/><em>' + 'Surface Type: ' + feature.properties.trail_surf + '<br/><em>' + 'Miles: ' + feature.properties.miles + '<br/><em>' + 'Reviews: ' + feature.properties.user_date + ': ' + feature.properties.review + '</p>');
@@ -505,7 +505,7 @@ var locateControl = L.control.locate({
 
 function getsearchdata() {
     var sqlSer = "SELECT name, poitype, the_geom FROM mlazarte. vof_points WHERE poitype IN ('Campground', 'Entrance Station', 'Gift Shop','Parking','Picnic Area','Restrooms','Trailhead', 'Viewpoint','Visitor Center')";
-    var searchLayer = $.getJSON("https://mlazarte.carto.com:443/api/v2/sql?q=select * from mlazarte.vof_points" + sqlSer, function (data) {
+    var searchLayer = $.getJSON("https://mlazarte.carto.com/api/v2/sql?q=select * from mlazarte.vof_points" + sqlSer, function (data) {
         return L.geoJson(data);
         console.log(L.geoJson(data));
     });
@@ -667,7 +667,7 @@ $(document).ready(function () {
         }
         console.log(sql);
 
-        var filterTrails = $.getJSON("https://mlazarte.carto.com:443/api/v2/sql?q=select * from mlazarte.vof_trails" + sql, function (data) {
+        var filterTrails = $.getJSON("https://mlazarte.carto.com/api/v2/sql?q=select * from mlazarte.vof_trails" + sql, function (data) {
             trails = L.geoJson(data, {
                 onEachFeature: function (feature, layer) {
                     console.log(feature);
