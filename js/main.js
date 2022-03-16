@@ -139,7 +139,7 @@ var makePopUpContent = function (props) {
 }
 
 // urls to get layer from carto
-var callsite = "https://mlazarte.carto.com:443/api/v2/?format=GeoJSON&q=";
+var callsite = "https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=";
 var url3 = callsite + sqlQuery3;
 var url4 = callsite + sqlQuery4;
 var url5 = callsite + sqlQuery5;
@@ -345,7 +345,7 @@ $.getJSON(url15, function (data) {
 
 
 // Get trails selection as GeoJSON and Add to Map
-var trails = $.getJSON("https://mlazarte.carto.com:443/api//v2/sql?format=GeoJSON&q=" + sqlQuery1, function (data) {
+var trails = $.getJSON("https://mlazarte.carto.com/api//v2/sql?format=GeoJSON&q=" + sqlQuery1, function (data) {
     trails = L.geoJson(data, {
         onEachFeature: function (feature, layer) {
             layer.bindPopup('<p><b>' + feature.properties.name + '</b><br/><em>' + 'Surface Type: ' + feature.properties.trail_surf + '<br/><em>' + 'Miles: ' + feature.properties.miles + '<br/><em>' + 'Reviews: ' + feature.properties.user_date + ': ' + feature.properties.review + '</p>');
@@ -437,7 +437,7 @@ function styleRoads(feature) {
     };
 } */
 
-var groupedOverlays = {
+var overlays = {
     "Park Amenities": {
         "<img src='images/entrance.svg' width='24' height='28'> Entrance Station": entranceStation,
         "<img src='images/water.svg' width='24' height='28'> Water Station": waterStation,
@@ -461,7 +461,7 @@ var groupedOverlays = {
 };
 
 
-var layerControl = L.control.groupedLayers(baseMaps, groupedOverlays).addTo(map);
+var layerControl = L.control.groupedLayers(baseMaps, overlays).addTo(map);
 map.addControl(layerControl);
 
 /* GPS enabled geolocation control set to follow the user's location */
@@ -499,7 +499,7 @@ var locateControl = L.control.locate({
 
 function getsearchdata() {
     var sqlSer = "SELECT name, poitype, the_geom FROM mlazarte.vof_points WHERE poitype IN ('Campground', 'Entrance Station', 'Gift Shop','Parking','Picnic Area','Restrooms','Trailhead', 'Viewpoint','Visitor Center')";
-    var searchLayer = $.getJSON("https://mlazarte.carto.com:443/api/v2/sql?format=GeoJSON&q=" + sqlSer, function (data) {
+    var searchLayer = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=" + sqlSer, function (data) {
         return L.geoJson(data);
         console.log(L.geoJson(data));
     });
@@ -572,7 +572,7 @@ $(document).ready(function () {
     });
 
     var ddlTrails = document.getElementById("ddlTrails")
-    $.get("https://mlazarte.carto.com:443/api/v2/sql?q=" + sqlQueryddl,
+    $.get("https://mlazarte.carto.com/api/v2/sql?q=" + sqlQueryddl,
         function (data) {
             console.log(data);
             for (i = 0; i < data.total_rows; i++) {
@@ -602,7 +602,7 @@ $(document).ready(function () {
         var ln = x[2].value;
         var sqlReview = "INSERT INTO mlazarte.user_review(trail_id, review, user_date, first_name, last_name) VALUES(" + trailID + ", '" + review_ + "' , '" + userDate + "' , '" + fn + "' ,'" + ln + "')";
 
-        var posting = $.post("https://mlazarte.carto.com:443/api/v2/sql?q=" + sqlReview).done(function () {
+        var posting = $.post("https://mlazarte.carto.com/api/v2/sql?q=" + sqlReview).done(function () {
             alert("Thank you for your review!")
             // Reset the form
             $("#review_trails_form")[0].reset();
@@ -661,7 +661,7 @@ $(document).ready(function () {
         }
         console.log(sql);
 
-        var filterTrails = $.getJSON("https://mlazarte.carto.com:443/api/v2/sql?format=GeoJSON&q=" + sql, function (data) {
+        var filterTrails = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=" + sql, function (data) {
             trails = L.geoJson(data, {
                 onEachFeature: function (feature, layer) {
                     console.log(feature);
