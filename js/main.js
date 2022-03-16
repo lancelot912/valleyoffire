@@ -509,7 +509,7 @@ function getsearchdata() {
 map.addControl(new L.Control.Search({
     sourceData: getsearchdata,
     propertyName: 'name',
-    textPlaceholder: 'Search for Point of Interests',
+    textPlaceholder: 'Search Here',
     markerLocation: true
 }));
 
