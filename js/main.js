@@ -39,7 +39,7 @@ var baseMaps = {
 
 // sql queries to get layers
 
-var sqlQuery1 = "SELECT t.the_geom, t.trail_id, t.name, t.meters, t.miles, t.trail_surf, u.first_name, u.last_name, u.trail_id, u.user_date, u.review FROM mlazarte.vof_trails AS t LEFT OUTER JOIN mlazarte.user_review AS u ON t.trail_id = u.trail_id";
+var sqlQuery1 = "SELECT t.the_geom, t.trail_id, t.name, t.meters, t.miles, t.trail_surf, u.first_name, u.last_name, u.trail_id, u.review FROM mlazarte.vof_trails AS t LEFT OUTER JOIN mlazarte.user_review AS u ON t.trail_id = u.trail_id";
 // var sqlQuery2 = "SELECT * FROM mlazarte.vof_roads"; // roads
 var sqlQuery3 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Campground'";
 var sqlQuery4 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Entrance Station'";
@@ -259,6 +259,7 @@ var waterStation = L.geoJson(null, {
         });
     }
 });
+
 
 $.getJSON(url3, function (data) {
     campgrounds.addData(data);
@@ -496,7 +497,7 @@ var locateControl = L.control.locate({
 
 
 function getsearchdata() {
-    var sqlSer = "SELECT name, poitype, the_geom FROM mlazarte.vof_points WHERE poitype IN ('Campground', 'Entrance Station', 'Gift Shop','Parking','Picnic Area','Restrooms','Trailhead', 'Viewpoint','Visitor Center')";
+    var sqlSer = "SELECT name, poitype, the_geom FROM mlazarte.vof_points WHERE poitype IN ('Campground', 'Entrance Station', 'Gift Shop','Parking','Picnic Area','Restrooms','Trailhead', 'Viewpoint','Visitor Center', 'Water Station')";
     var searchLayer = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=" + sqlSer, function (data) {
         return L.geoJson(data);
         console.log(L.geoJson(data));
@@ -592,13 +593,13 @@ $(document).ready(function () {
         var x = $("#review_trails_form").serializeArray();
 
         var trailVal = x[0].value;
-        var trailID = (trailVal * 1);
+        var trail_id_ = (trailVal * 1);
 
         var review_ = x[4].value;
-        var userDate = x[3].value;
-        var fn = x[1].value;
-        var ln = x[2].value;
-        var sqlReview = "INSERT INTO mlazarte.user_review(trail_id, review, user_date, first_name, last_name) VALUES(" + trailID + ", '" + review_ + "' , '" + userDate + "' , '" + fn + "' ,'" + ln + "')";
+        var user_date_ = x[3].value;
+        var first_name_ = x[1].value;
+        var last_name_ = x[2].value;
+        var sqlReview = "INSERT INTO mlazarte.user_review(trail_id, review, user_date, first_name, last_name) VALUES(" + trail_id_ + ", '" + review_ + "' , '" + user_date_ + "' , '" + first_name_ + "' ,'" + last_name_ + "')";
 
         var posting = $.post("https://mlazarte.carto.com/api/v2/sql?q=" + sqlReview).done(function () {
             alert("Thank you for your review!")
