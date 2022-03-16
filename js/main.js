@@ -44,17 +44,16 @@ var sqlQuery1 = "SELECT t.the_geom, t.trail_id, t.name, t.meters, t.miles, t.tra
 var sqlQuery3 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Campground'";
 var sqlQuery4 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Entrance Station'";
 var sqlQuery5 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Gift Shop'";
-var sqlQuery6 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Entrance Station'";
-var sqlQuery7 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Mobile Service'";
-var sqlQuery8 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Parking'";
-var sqlQuery9 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Petroglyphics'";
-var sqlQuery10 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Picnic Area'";
-var sqlQuery11 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Restrooms'";
-var sqlQuery12 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Showers'";
-var sqlQuery13 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Trailhead'";
-var sqlQuery14 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Viewpoint'";
-var sqlQuery15 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Visitor Center'";
-var sqlQuery16 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Water Station'";
+var sqlQuery6 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Mobile Service'";
+var sqlQuery7 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Parking'";
+var sqlQuery8 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Petroglyphics'";
+var sqlQuery9 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Picnic Area'";
+var sqlQuery10 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Restrooms'";
+var sqlQuery11 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Showers'";
+var sqlQuery12 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Trailhead'";
+var sqlQuery13 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Viewpoint'";
+var sqlQuery14 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Visitor Center'";
+var sqlQuery15= "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Water Station'";
 //sql for dropdown list
 var sqlQueryddl = "SELECT trail_id, name FROM mlazarte.vof_trails"; // trails 
 //icons 
@@ -153,7 +152,6 @@ var url12 = callsite + sqlQuery12;
 var url13 = callsite + sqlQuery13;
 var url14 = callsite + sqlQuery14;
 var url15 = callsite + sqlQuery15;
-var url16 = callsite + sqlQuery16;
 
 // Point of interest layers for map
 var campgrounds = L.geoJson(null, {
@@ -293,13 +291,13 @@ $.getJSON(url7, function (data) {
     console.log("Request Failed: " + err);
 });
 $.getJSON(url8, function (data) {
-    picnicArea.addData(data);
+    petroglyphs.addData(data);
 }).fail(function (jqxhr, textStatus, error) {
     var err = textStatus + ", " + error;
     console.log("Request Failed: " + err);
 });
 $.getJSON(url9, function (data) {
-    petroglyphs.addData(data);
+    picnicArea.addData(data);
 }).fail(function (jqxhr, textStatus, error) {
     var err = textStatus + ", " + error;
     console.log("Request Failed: " + err);
