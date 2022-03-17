@@ -600,8 +600,9 @@ $(document).ready(function () {
         var first_name_ = x[1].value;
         var last_name_ = x[2].value;
         var sqlReview = "INSERT INTO mlazarte.user_review(trail_id, review, user_date, first_name, last_name) VALUES(" + trail_id_ + ", '" + review_ + "' , '" + user_date_ + "' , '" + first_name_ + "' ,'" + last_name_ + "')";
+        var cartolink = "https://mlazarte.carto.com/api/v2/sql?q=INSERT INTO mlazarte.user_review(trail_id, review, user_date, first_name, last_name) VALUES(" + trail_id_ + ", '" + review_ + "' , '" + user_date_ + "' , '" + first_name_ + "' ,'" + last_name_ + "')&api_key=QEd6BlKUYWtt0X6Kuo5aEA";
 
-        var posting = $.post("https://mlazarte.carto.com/api/v2/sql?q=" + sqlReview).done(function () {
+        var posting = $.post(cartolink).done(function () {
             alert("Thank you for your review!")
             // Reset the form
             $("#review_trails_form")[0].reset();
