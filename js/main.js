@@ -40,7 +40,7 @@ var baseMaps = {
 // sql queries to get layers
 
 var sqlQuery1 = "SELECT t.the_geom, t.trail_id, t.name, t.meters, t.miles, t.trail_surf, u.first_name, u.last_name, u.trail_id, u.review FROM mlazarte.vof_trails AS t LEFT OUTER JOIN mlazarte.user_review AS u ON t.trail_id = u.trail_id";
-// var sqlQuery2 = "SELECT * FROM mlazarte.vof_roads"; // roads
+var sqlQuery2 = "SELECT * FROM mlazarte.valleyoffire";
 var sqlQuery3 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Campground'";
 var sqlQuery4 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Entrance Station'";
 var sqlQuery5 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Gift Shop'";
@@ -120,22 +120,14 @@ var onEachFeature = function (feature, layer) {
     if (feature.properties) {
         var popUpContent = makePopUpContent(feature.properties);
         layer.bindPopup(popUpContent);
-
-        layer.on('mouseover', function (e) {
-            this.openPopup();
-        });
-        layer.on('mouseout', function (e) {
-            this.closePopup();
-        });
-    };
-
-}
+}}
 // function to make our popup-content
 var makePopUpContent = function (props) {
     return '<div class="popup-content">' +
         '<p><strong>Name:</strong> ' + props.name + '</p>' +
         '</div>'
 }
+
 
 // urls to get layer from carto
 var callsite = "https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=";
@@ -261,6 +253,7 @@ var waterStation = L.geoJson(null, {
 });
 
 
+
 $.getJSON(url3, function (data) {
     campgrounds.addData(data);
 }).fail(function (jqxhr, textStatus, error) {
@@ -335,7 +328,6 @@ $.getJSON(url14, function (data) {
 });
 $.getJSON(url15, function (data) {
     waterStation.addData(data);
-
 }).fail(function (jqxhr, textStatus, error) {
     var err = textStatus + ", " + error;
     console.log("Request Failed: " + err);
@@ -347,13 +339,14 @@ $.getJSON(url15, function (data) {
 var trails = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=" + sqlQuery1, function (data) {
     trails = L.geoJson(data, {
         onEachFeature: function (feature, layer) {
-            layer.bindPopup('<p><b>' + feature.properties.name + '</b><br/><em>' + 'Surface Type: ' + feature.properties.trail_surf + '<br/><em>' + 'Miles: ' + feature.properties.miles + '<br/><em>' + 'Reviews: ' + feature.properties.user_date + ': ' + feature.properties.review + '</p>');
+            layer.bindPopup('<p><b>' + feature.properties.name + '</b><br/><em>' + '<b>Surface Type: </b>' + feature.properties.trail_surf + '<br/><em>' + '<b>Miles: </b>' + feature.properties.miles + '<br/><em>' + '<b>Reviews: </b>' + feature.properties.first_name + ': ' + feature.properties.review + '</p>');
             layer.on({
                 mouseover: function (e) {
                     layer.setStyle({
-                        weight: 3,
+                        weight: 5,
                         color: "#00FFFF",
-                        opacity: 1
+                        opacity: 1,
+                        dashArray: "5 5"
                     });
                     if (!L.Browser.ie && !L.Browser.opera) {
                         layer.bringToFront();
@@ -362,7 +355,6 @@ var trails = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q="
                 mouseout: function (e) {
                     trails.resetStyle(e.target);
                 },
-
             });
         },
         style: styleTrails,
@@ -372,18 +364,10 @@ var trails = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q="
 
 function styleTrails(feature) {
     type = feature.properties.trail_surf;
-    var colorToUse;
-    if (type === "Sand/Soil") colorToUse = 'green';
-    else if (type === "Sand") colorToUse = 'gold';
-    else if (type === "Soil") colorToUse = 'brown';
-    else if (type === "Rock/Sand/Soil") colorToUse = 'gray';
-    else colorToUse = "Crushed Stones";
-
-
     return {
-        "color": colorToUse,
-        "fillColor": colorToUse,
-        "weight": 3,
+        "color": "red",
+        "fillColor": 'red',
+        "weight": 5,
         "dashArray": "5 5"
     };
 }
@@ -392,49 +376,25 @@ function styleFilterTrails(feature) {
     return {
         "color": 'red',
         "fillColor": 'red',
-        "weight": 2,
+        "weight": 5,
         "dashArray": "5 5"
     };
 }
 
-/*  var roads = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=" + sqlQuery2, function (data) {
-    roads = L.geoJson(data, {
-        onEachFeature: function (feature, layer) {
-            layer.bindPopup('<p><b>' + feature.properties.rdlabel + '</b><br /><em>' + 'Surface Type: ' + feature.properties.rdsurface + '</p>');
-            layer.on({
-                mouseover: function (e) {
-                    layer.setStyle({
-                        weight: 3,
-                        color: "#00FFFF",
-                        opacity: 1
-                    });
-                    if (!L.Browser.ie && !L.Browser.opera) {
-                        layer.bringToFront();
-                    }
-                },
-                mouseout: function (e) {
-                    roads.resetStyle(e.target);
-                },
-
-            });
-        },
-        style: styleRoads,
+var boundary = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=" + sqlQuery2, function (data) {
+    boundary = L.geoJson(data, {
+        style: styleBoundary,
     }).addTo(map);
-}); 
+});
 
-function styleRoads(feature) {
-    type = feature.properties.rdsurface;
-    var colorToUse;
-    if (type === "Gravel") colorToUse = '#BF9D7E';
-    else if (type === "Asphalt") colorToUse = 'black';
-    else colorToUse = "red";
-
+function styleBoundary(feature) {
     return {
-        "color": colorToUse,
-        "fillColor": colorToUse,
-        "weight": 2,
+        "color": 'blue',
+        "fillColor": 'transparent',
+        "weight": 5
     };
-} */
+}
+
 
 var overlays = {
     "Park Amenities": {
@@ -504,7 +464,6 @@ function getsearchdata() {
     });
 }
 
-
 map.addControl(new L.Control.Search({
     sourceData: getsearchdata,
     propertyName: 'name',
@@ -519,7 +478,7 @@ $(document).ready(function () {
         $('#trailFiltOutput').empty();
     });
 
-    $('<p class = "controlHeader">Basemaps</p>').insertBefore('div.leaflet-control-layers-base');
+    $('<p class = "controlHeader"><b>Basemaps</b></p>').insertBefore('div.leaflet-control-layers-base');
 
     $("#sidebar-toggle-btn").click(function () {
         animateSidebar();
@@ -599,7 +558,6 @@ $(document).ready(function () {
         var user_date_ = x[3].value;
         var first_name_ = x[1].value;
         var last_name_ = x[2].value;
-        var sqlReview = "INSERT INTO mlazarte.user_review(trail_id, review, user_date, first_name, last_name) VALUES(" + trail_id_ + ", '" + review_ + "' , '" + user_date_ + "' , '" + first_name_ + "' ,'" + last_name_ + "')";
         var cartolink = "https://mlazarte.carto.com/api/v2/sql?q=INSERT INTO mlazarte.user_review(trail_id, review, user_date, first_name, last_name) VALUES(" + trail_id_ + ", '" + review_ + "' , '" + user_date_ + "' , '" + first_name_ + "' ,'" + last_name_ + "')&api_key=QEd6BlKUYWtt0X6Kuo5aEA";
 
         var posting = $.post(cartolink).done(function () {
@@ -666,7 +624,7 @@ $(document).ready(function () {
                 onEachFeature: function (feature, layer) {
                     console.log(feature);
                     console.log(feature.properties);
-                    layer.bindPopup('<p><b>' + feature.properties.name + '</b><br/><em>' + 'Surface Type: ' + feature.properties.trail_surf + '<br/><em>' + 'Miles: ' + feature.properties.miles + '<br/><em>' + 'Reviews: ' + feature.properties.user_date + ': ' + feature.properties.review + '</p>');
+                    layer.bindPopup('<p><b>' + feature.properties.name + '</b><br/><em>' + '<b>Surface Type: <b>' + feature.properties.trail_surf + '<br/><em>' + '<b>Miles: <b>' + feature.properties.miles + '<br/><em>' + '<b>Reviews: <b>' + feature.properties.user_date + ': ' + feature.properties.review + '</p>');
                     $('#trailFiltOutput').append('<p class="trail-filter">' + feature.properties.name + '</p>')
                     layer.on({
                         mouseover: function (e) {

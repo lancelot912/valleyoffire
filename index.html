@@ -8,7 +8,7 @@
     <title></title>
 
     <!--put your external stylesheet links here-->
-    <!--Carto Css-->
+    <!--Carto CSS-->
     <link rel="stylesheet" href="https://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
     <script src="https://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
     <!-- Bootstrap CSS -->
@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="lib/leaflet-groupedlayercontrol/leaflet.groupedlayercontrol.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
     <link rel="stylesheet" href="lib/leaflet-sidebar-v2/css/leaflet-sidebar.css" />
+    <link rel="stylesheet" href="css/leaflet.css">
     <link rel="stylesheet" href="css/style.css">
 
 
@@ -47,14 +48,13 @@
             </div>
 
             <ul class="list-unstyled components">
-                <p>Menu</p>
                 <li class="active">
                     <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pick A Trail</a>
                     <ul class="collapse list-unstyled" id="homeSubmenu">
                         <li>
                             
                      <form id="query_trails_form">
-                    <div><br><label>Surface:</label>
+                    <div><br><label><b>Surface:</b></label>
                         <select name="surface_type">
                             <option value="">Choose Surface</option>
                             <option value="Sand/Soil">Sand/Soil</option>
@@ -64,7 +64,7 @@
                             <option value="Crushed Stones">Crushed Stones</option>
                         </select>
                     </div>
-                            <div><label>Distance (Miles):</label>
+                            <div><label><b>Distance (Miles):</b></label>
                         <select name="mileage">
                             <option value="">Choose Range</option>
                             <option value="< 1">Less than 1</option>
@@ -79,7 +79,7 @@
                     </button> <button type="button" class="btn-sm" id="query-trails-reset"><i class="fas fa-sync-alt"></i></button>
                 </form>
                     <div id="trailFiltOutput"><br>
-                        <h5> Your Filter Results:</h5><br>
+                        <h5> <b>Results:</b></h5><br>
                     </div>     
                         </li>
                         
@@ -91,14 +91,14 @@
                     <ul class="collapse list-unstyled" id="pageSubmenu">
                         <li>
                            <form id="review_trails_form"><br>
-                        <div><label>Trail Name:</label>
+                        <div><label><b>Trail Name:</b></label>
                             <select id="ddlTrails" class="trailform" name="trailID">
                                 </select>
                                     </div>
-                                    <div><label>First Name:</label><input placeholder="Your first name" name="fn"></div>
-                                    <div><label>Last Name:</label><input placeholder="Your last name" name="ln"></div>
-                                    <div><label>Date (MM-DD-YYYY):</label><input placeholder="Date" name="user_date"></div>
-                                    <div><label>Review Details:</label><input placeholder="Write your review" name="review_"></div>
+                                    <div><label><b>First Name:</b></label><input placeholder="Your first name" name="fn"></div>
+                                    <div><label><b>Last Name:</b></label><input placeholder="Your last name" name="ln"></div>
+                                    <div><label><b>Date (MM-DD-YYYY):</b></label><input placeholder="Date" name="user_date"></div>
+                                    <div><label><b>Review Details:</b></label><input placeholder="Write your review" name="review_"></div>
                                     <br>
                                     <button type="submit" class="btn btn-default" id="reviewSubmitBtn">
                                     Submit Review
@@ -115,7 +115,7 @@
                     <ul class="collapse list-unstyled" id="homeAbout">
                         <li>
                             
-                        <p> Welcome to the Valley of Fire State Park. If you to know more about the park, please check the application and also visit the website on the link below.</p><br>
+                        <p><b>Welcome to the Valley of Fire State Park. If you to know more about the park, please check the application and also visit the website on the link below.</b></p><br>
                    
                         </li>
                     </ul>
