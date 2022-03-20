@@ -40,7 +40,7 @@ var baseMaps = {
 // sql queries to get layers
 
 var sqlQuery1 = "SELECT t.the_geom, t.trail_id, t.name, t.meters, t.miles, t.trail_surf, u.first_name, u.last_name, u.trail_id, u.review FROM mlazarte.vof_trails AS t LEFT OUTER JOIN mlazarte.user_review AS u ON t.trail_id = u.trail_id";
-var sqlQuery2 = "SELECT * FROM mlazarte.valleyoffire";
+var sqlQuery2 = "SELECT * FROM mlazarte.vof_boundary";
 var sqlQuery3 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Campground'";
 var sqlQuery4 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Entrance Station'";
 var sqlQuery5 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Gift Shop'";
@@ -390,8 +390,7 @@ var boundary = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q
 function styleBoundary(feature) {
     return {
         "color": 'blue',
-        "fillColor": 'transparent',
-        "weight": 5
+        "weight": 3
     };
 }
 
@@ -624,7 +623,7 @@ $(document).ready(function () {
                 onEachFeature: function (feature, layer) {
                     console.log(feature);
                     console.log(feature.properties);
-                    layer.bindPopup('<p><b>' + feature.properties.name + '</b><br/><em>' + '<b>Surface Type: <b>' + feature.properties.trail_surf + '<br/><em>' + '<b>Miles: <b>' + feature.properties.miles + '<br/><em>' + '<b>Reviews: <b>' + feature.properties.user_date + ': ' + feature.properties.review + '</p>');
+                    layer.bindPopup('<p><b>' + feature.properties.name + '</b><br/><em>' + '<b>Surface Type: </b>' + feature.properties.trail_surf + '<br/><em>' + '<b>Miles: </b>' + feature.properties.miles + '<br/><em>' + '<b>Reviews: </b>' + feature.properties.user_date + ': ' + feature.properties.review + '</p>');
                     $('#trailFiltOutput').append('<p class="trail-filter">' + feature.properties.name + '</p>')
                     layer.on({
                         mouseover: function (e) {
