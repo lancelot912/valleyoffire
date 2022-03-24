@@ -39,7 +39,7 @@ var baseMaps = {
 
 // sql queries to get layers
 
-var sqlQuery1 = "SELECT t.the_geom, t.trail_id, t.name, t.meters, t.miles, t.trail_surf, u.first_name, u.last_name, u.trail_id, u.review FROM mlazarte.vof_trails AS t LEFT OUTER JOIN mlazarte.user_review AS u ON t.trail_id = u.trail_id";
+var sqlQuery1 = "SELECT t.the_geom, t.trail_id, t.name, t.meters, t.miles, t.trail_surf, t.trail_diff, u.first_name, u.last_name, u.trail_id, u.review FROM mlazarte.vof_trails AS t LEFT OUTER JOIN mlazarte.user_review AS u ON t.trail_id = u.trail_id";
 var sqlQuery2 = "SELECT * FROM mlazarte.vof_boundary";
 var sqlQuery3 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Campground'";
 var sqlQuery4 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Entrance Station'";
@@ -339,7 +339,7 @@ $.getJSON(url15, function (data) {
 var trails = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=" + sqlQuery1, function (data) {
     trails = L.geoJson(data, {
         onEachFeature: function (feature, layer) {
-            layer.bindPopup('<p><b>' + feature.properties.name + '</b><br/><em>' + '<b>Surface Type: </b>' + feature.properties.trail_surf + '<br/><em>' + '<b>Miles: </b>' + feature.properties.miles + '<br/><em>' + '<b>Reviews: </b>' + feature.properties.first_name + ': ' + feature.properties.review + '</p>');
+            layer.bindPopup('<p><b>' + feature.properties.name + '</b><br/><em>' + '<b> Difficulty: </b>' + feature.properties.trail_diff + '<br/><em>' + '<b>Surface Type: </b>' + feature.properties.trail_surf + '<br/><em>' + '<b>Miles: </b>' + feature.properties.miles + '<br/><em>' + '<b>Reviews: </b>' + feature.properties.first_name + ': ' + feature.properties.review + '</p>');
             layer.on({
                 mouseover: function (e) {
                     layer.setStyle({
@@ -363,14 +363,21 @@ var trails = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q="
 
 
 function styleTrails(feature) {
-    type = feature.properties.trail_surf;
+    diff = feature.properties.trail_diff;
+    var colorToUse;
+    if (diff === "Easy") colorToUse = 'green';
+    else if (diff === "Intermediate") colorToUse = 'yellow';
+    else if (diff === "Hard") colorToUse = 'red';
+    else colorToUse = "orange";
+
     return {
-        "color": "red",
-        "fillColor": 'red',
-        "weight": 5,
+        "color": colorToUse,
+        "fillColor": colorToUse,
+        "weight": 3,
         "dashArray": "5 5"
     };
 }
+    
 
 function styleFilterTrails(feature) {
     return {
@@ -380,6 +387,8 @@ function styleFilterTrails(feature) {
         "dashArray": "5 5"
     };
 }
+
+   
 
 var boundary = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=" + sqlQuery2, function (data) {
     boundary = L.geoJson(data, {
@@ -416,10 +425,11 @@ var overlays = {
     "Transit": {
         "<img src='images/parking.svg' width='24' height='28'> Parking": parking
     }
+
 };
 
 
-var layerControl = L.control.groupedLayers(baseMaps, overlays).addTo(map);
+var layerControl = L.control.groupedLayers(baseMaps, overlays,{collapsed:false}).addTo(map);
 map.addControl(layerControl);
 
 /* GPS enabled geolocation control set to follow the user's location */
@@ -456,7 +466,7 @@ var locateControl = L.control.locate({
 
 
 function getsearchdata() {
-    var sqlSer = "SELECT name, poitype, the_geom FROM mlazarte.vof_points WHERE poitype IN ('Campground', 'Entrance Station', 'Gift Shop','Parking','Picnic Area','Restrooms','Trailhead', 'Viewpoint','Visitor Center', 'Water Station')";
+    var sqlSer = "SELECT name, poitype, the_geom FROM mlazarte.vof_points";
     var searchLayer = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=" + sqlSer, function (data) {
         return L.geoJson(data);
         console.log(L.geoJson(data));
@@ -536,7 +546,7 @@ $(document).ready(function () {
                 var option = document.createElement("OPTION");
                 option.innerHTML = data.rows[i].name;
 
-                //Set route_no in Value part.
+                //Set trail_id in Value part.
                 option.value = data.rows[i].trail_id;
 
                 //Add the Option element to DropDownList.
@@ -582,17 +592,21 @@ $(document).ready(function () {
         console.log(surfaceType);
         //        "WHERE trail_surf = 'surfaceType'"
 
-         var distanceRange = x[1].value;
+        var distanceRange = x[1].value;
         console.log(distanceRange);
         //        "WHERE miles = 'distanceRange'"
 
+        var difficult = x[2].value;
+        console.log(difficult);
+        //        "WHERE difficulty = 'trail_diff'"
 
-        var sqlFilter = "SELECT t.the_geom, t.name, t.meters, t.miles, t.trail_surf, u.first_name, u.last_name, u.trail_id, u.user_date, u.review FROM mlazarte.vof_trails AS t LEFT OUTER JOIN mlazarte.user_review AS u ON t.trail_id = u.trail_id"
+
+        var sqlFilter = "SELECT t.the_geom, t.name, t.meters, t.miles, t.trail_surf, t.trail_diff, u.first_name, u.last_name, u.trail_id, u.user_date, u.review FROM mlazarte.vof_trails AS t LEFT OUTER JOIN mlazarte.user_review AS u ON t.trail_id = u.trail_id"
 
 
 
         // If no filters are selected
-        if (surfaceType == "" && classType == "" && distanceRange == "") {
+        if (surfaceType == ""  && distanceRange ==  "" && difficult == "") {
             var sql = sqlFilter;
         }
 
@@ -609,10 +623,20 @@ $(document).ready(function () {
             // If distanceRange is not null, add distanceRange to WHERE clause
             if (distanceRange != "") {
                 var where_dist = "t.miles " + distanceRange;
-                if (surfaceType != "" || classType != "") {
+                if (surfaceType != "" ||  difficult != "") {
                     sql += " AND " + where_dist;
                 } else {
                     sql += where_dist;
+                }
+            }
+
+            // If difficulty is not null, add difficulty to WHERE clause
+            if (difficult != "") {
+                var where_diff = "t.trail_diff = '" + difficult + "'";
+                if (surfaceType != "" ||  distanceRange != "" ) {
+                    sql += " AND " + where_diff;
+                } else {
+                    sql += where_diff;
                 }
             }
         }
@@ -623,7 +647,7 @@ $(document).ready(function () {
                 onEachFeature: function (feature, layer) {
                     console.log(feature);
                     console.log(feature.properties);
-                    layer.bindPopup('<p><b>' + feature.properties.name + '</b><br/><em>' + '<b>Surface Type: </b>' + feature.properties.trail_surf + '<br/><em>' + '<b>Miles: </b>' + feature.properties.miles + '<br/><em>' + '<b>Reviews: </b>' + feature.properties.user_date + ': ' + feature.properties.review + '</p>');
+                    layer.bindPopup('<p><b>' + feature.properties.name + '</b><br/><em>' + '<b>Difficulty: </b>' + feature.properties.trail_diff + '<br/><em>' + '<b>Surface Type: </b>' + feature.properties.trail_surf + '<br/><em>' + '<b>Miles: </b>' + feature.properties.miles + '<br/><em>' + '<b>Reviews: </b>' + feature.properties.user_date + ': ' + feature.properties.review + '</p>');
                     $('#trailFiltOutput').append('<p class="trail-filter">' + feature.properties.name + '</p>')
                     layer.on({
                         mouseover: function (e) {
