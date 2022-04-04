@@ -94,7 +94,7 @@
                     </ul>
                 </li>
                
-                <li>
+                <li class="active">
                     <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Leave A Review</a>
                     <ul class="collapse list-unstyled" id="pageSubmenu">
                         <li>
@@ -118,25 +118,41 @@
                     </ul>
                 </li>
 
-                <li>
-                  <li class="active">
-                    <a href="#homeAbout" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">About</a>
+            <!--    <li class="active">
+                    <a href="#homeAbout" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Points of Interest</a>
                     <ul class="collapse list-unstyled" id="homeAbout">
                         <li>
-                        <p><b>Welcome to the Valley of Fire State Park. If you want to know more about the park, please check the application and also visit the website on the link below.</b></p><br>
-                        </li>
+                    <form id="select_form"><br>
+                    <div><label><b>Trailhead:</b></label>
+                        <select id="ddlTheads" class="selectform" name="poitype">
+                            </select></div>
+                    <div><label><b>Campground:</b></label>
+                        <select id="ddlCamps" class="selectform" name="poitype">
+                            </select></div>
+                    <div><label><b>Viewpoint:</b></label>
+                        <select id="ddlViews" class="selectform" name="poitype">
+                            </select></div>
+                            <br>              
+                      </li>
                     </ul>
-                </li>
+                </li> -->
 
             <ul class="list-unstyled CTAs">
                 <li>
-                    <a href="http://parks.nv.gov/parks/valley-of-fire" class="website">Official Website </a>
-                </li>
-                <!-- weather widget start -->
-                <a class="weatherwidget-io" href="https://forecast7.com/en/36d58n114d47/moapa-valley/?unit=us" data-label_1="MOAPA VALLEY" data-label_2="WEATHER" data-days="3" data-theme="orange" >MOAPA VALLEY WEATHER</a>
-                <script>
-                !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
-                </script></ul>
+                    <div id="weather-panel" style="background-color:rgba(0, 0, 0, 0.3); padding: 10px; width: 200px;">
+                    <table>
+                        <tr>
+                        <th><h2 class="h2 weather">Current Weather:</h2></th>
+                        <th><span class="temperature" id="temperature-read">-</span>°F</th>
+                        </tr>
+                        <tr>
+                        <th><h2 class="h2 weather">Location: </h2></th>
+                        <th><span class="location" id="location-show">-</span></th>
+                        </tr>
+                    </table>
+                    </div>
+                
+            </li></ul>
         </nav>
 
         <!-- Page Content  -->
@@ -150,7 +166,7 @@
     <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-
+    <script src="https://cartodb-libs.global.ssl.fastly.net/carto.js/v4.0.0-beta.4/carto.min.js"></script>
 
     <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
     <script src="lib/leaflet-zoomhome/leaflet.zoomhome.js" type="text/javascript"></script>

@@ -1,4 +1,3 @@
-// Javascript by //
 var imagery = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibGFuY2VsYXphcnRlIiwiYSI6ImNrcDIyZHN4bzAzZTEydm8yc24zeHNodTcifQ.ydwAELOsAYya_MiJNar3ow', {
     id: 'mapbox.satellite',
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>'
@@ -46,7 +45,7 @@ var sqlQuery4 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Entrance Sta
 var sqlQuery5 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Gift Shop'";
 var sqlQuery6 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Mobile Service'";
 var sqlQuery7 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Parking'";
-var sqlQuery8 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Petroglyphics'";
+var sqlQuery8 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Petroglyph'";
 var sqlQuery9 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Picnic Area'";
 var sqlQuery10 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Restrooms'";
 var sqlQuery11 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Showers'";
@@ -333,7 +332,45 @@ $.getJSON(url15, function (data) {
     console.log("Request Failed: " + err);
 });
 
+/* var ddlCamps = document.getElementById("ddlCamps")
+    $.get("https://mlazarte.carto.com/api/v2/sql?q=" + sqlQuery3,
+        function (data) {
+            console.log(data);
+            for (i = 0; i < data.total_rows; i++) {
+                var option1 = document.createElement("OPTION");
+                option1.innerHTML = data.rows[i].name;
 
+                //Add the Option element to DropDownList.
+                ddlCamps.options.add(option1);
+            }
+        });
+
+var ddlTheads = document.getElementById("ddlTheads")
+    $.get("https://mlazarte.carto.com/api/v2/sql?q=" + sqlQuery12,
+        function (data) {
+            console.log(data);
+            for (i = 0; i < data.total_rows; i++) {
+                var option2 = document.createElement("OPTION");
+                option2.innerHTML = data.rows[i].name;
+
+                //Add the Option element to DropDownList.
+                ddlTheads.options.add(option2);
+            }
+        });    
+
+var ddlViews = document.getElementById("ddlViews")
+    $.get("https://mlazarte.carto.com/api/v2/sql?q=" + sqlQuery13,
+        function (data) {
+            console.log(data);
+            for (i = 0; i < data.total_rows; i++) {
+                var option3 = document.createElement("OPTION");
+                option3.innerHTML = data.rows[i].name;
+
+                //Add the Option element to DropDownList.
+                ddlViews.options.add(option3);
+            }
+        }); 
+*/
 
 // Get trails selection as GeoJSON and Add to Map
 var trails = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=" + sqlQuery1, function (data) {
@@ -388,8 +425,6 @@ function styleFilterTrails(feature) {
     };
 }
 
-   
-
 var boundary = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=" + sqlQuery2, function (data) {
     boundary = L.geoJson(data, {
         style: styleBoundary,
@@ -405,6 +440,12 @@ function styleBoundary(feature) {
 
 
 var overlays = {
+    "Trail Points of Interest": {
+        "<img src='images/campground.svg' width='24' height='28'> Campgrounds": campgrounds,
+        "<img src='images/trailhead.svg' width='24' height='28'> Trailheads": trailheads,
+        "<img src='images/viewpoint.svg' width='24' height='28'> View Point": viewpoint,
+        "<img src='images/petroglyph.svg' width='24' height='28'> Petroglyph": petroglyphs
+    },
     "Park Amenities": {
         "<img src='images/entrance.svg' width='24' height='28'> Entrance Station": entranceStation,
         "<img src='images/water.svg' width='24' height='28'> Water Station": waterStation,
@@ -413,19 +454,9 @@ var overlays = {
         "<img src='images/picnic.svg' width='24' height='28'> Picnic Area": picnicArea,
         "<img src='images/showers.svg' width='24' height='28'> Showers": showers,
         "<img src='images/restroom.svg' width='24' height='28'> Restroom": restroom,
-        "<img src='images/visitor.svg' width='24' height='28'> Visitor Center": visitorCenter
-    },
-
-    "Trail Points of Interest": {
-        "<img src='images/campground.svg' width='24' height='28'> Campgrounds": campgrounds,
-        "<img src='images/trailhead.svg' width='24' height='28'> Trailheads": trailheads,
-        "<img src='images/viewpoint.svg' width='24' height='28'> View Point": viewpoint,
-    },
-
-    "Transit": {
+        "<img src='images/visitor.svg' width='24' height='28'> Visitor Center": visitorCenter,
         "<img src='images/parking.svg' width='24' height='28'> Parking": parking
     }
-
 };
 
 
@@ -452,8 +483,7 @@ var locateControl = L.control.locate({
     metric: false,
     strings: {
         title: "Current Location",
-        popup: "You are within {distance} {unit} from this point",
-        outsideMapBoundsMsg: "You seem located outside the boundaries of the map"
+        popup: "You are within {distance} {unit} from this point"
     },
     locateOptions: {
         maxZoom: 18,
@@ -465,20 +495,32 @@ var locateControl = L.control.locate({
 }).addTo(map);
 
 
-function getsearchdata() {
-    var sqlSer = "SELECT name, poitype, the_geom FROM mlazarte.vof_points";
-    var searchLayer = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=" + sqlSer, function (data) {
+/* function searchpoints() {
+    var sqlsearch = "SELECT name, poitype, the_geom FROM mlazarte.vof_points";
+    var searchLayer = $.get("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=SELECT name, poitype, the_geom FROM mlazarte.vof_points", function (data) {
         return L.geoJson(data);
         console.log(L.geoJson(data));
     });
 }
 
 map.addControl(new L.Control.Search({
-    sourceData: getsearchdata,
-    propertyName: 'name',
+    sourcedata: searchpoints,
+    propertyName: 'Name',
     textPlaceholder: 'Search Here',
     markerLocation: true
 }));
+
+ $('#searchButton').click(function () {
+    input = $("#ad").val();
+    $.ajax({
+    type: "GET",
+    url: "https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=SELECT name, poitype, the_geom FROM mlazarte.vof_points",
+    dataType: 'json',
+    success: function (response) {
+        geojsonLayer = L.geoJson(response)
+        map.fitBounds(geojsonLayer.getBounds());
+    }});
+}) */
 
 
 $(document).ready(function () {
@@ -690,3 +732,36 @@ $(document).ready(function () {
         $('#sidebar').toggleClass('active');
     });
 });
+
+
+$(function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position)=>{
+        getTemperature(position.coords.longitude, position.coords.latitude);
+      });
+    }
+  });
+  
+  //function for getting temperature of specified location
+  function getTemperature(lng, lat){
+          // console.log(locationCoords)
+        //get weather for current location from weather.gov api
+        $.getJSON("https://api.weather.gov/points/"+lat+","+lng, function(data){
+          var currentCity = data.properties.relativeLocation.properties.city;
+          var currentState = data.properties.relativeLocation.properties.state;
+          var tempJSONUrl = data.properties.forecastHourly;
+          
+          console.log("current city: " + currentCity + ", " +currentState)
+          
+          document.getElementById("location-show").innerText = currentCity + ", " + currentState;
+          
+          // console.log(tempJSONUrl)
+          $.getJSON(tempJSONUrl, function(tempData){
+            var temp = tempData.properties.periods[0].temperature;
+            // console.log(temp)
+            document.getElementById("temperature-read").innerText = temp;
+          })
+        });
+  }
+  
+  var isWeather = false;
