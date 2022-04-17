@@ -1,3 +1,4 @@
+// Mapbox Layers
 var imagery = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibGFuY2VsYXphcnRlIiwiYSI6ImNrcDIyZHN4bzAzZTEydm8yc24zeHNodTcifQ.ydwAELOsAYya_MiJNar3ow', {
     id: 'mapbox.satellite',
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>'
@@ -15,7 +16,7 @@ var outdoors = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/outdoors-v11
 
 var mapOptions = {
     zoomControl: false,
-    center: [36.456,  -114.533],
+    center: [36.456, -114.533],
     zoom: 13,
     minZoom: 3,
     maxZoom: 18,
@@ -36,8 +37,7 @@ var baseMaps = {
 }
 
 
-// sql queries to get layers
-
+//SQL to get layers
 var sqlQuery1 = "SELECT t.the_geom, t.trail_id, t.name, t.meters, t.miles, t.trail_surf, t.trail_diff, u.first_name, u.last_name, u.trail_id, u.review FROM mlazarte.vof_trails AS t LEFT OUTER JOIN mlazarte.user_review AS u ON t.trail_id = u.trail_id";
 var sqlQuery2 = "SELECT * FROM mlazarte.vof_boundary";
 var sqlQuery3 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Campground'";
@@ -53,24 +53,16 @@ var sqlQuery12 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Trailhead'"
 var sqlQuery13 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Viewpoint'";
 var sqlQuery14 = "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Visitor Center'";
 var sqlQuery15= "SELECT * FROM mlazarte.vof_points WHERE poitype = 'Water Station'";
-//sql for dropdown list
-var sqlQueryddl = "SELECT trail_id, name FROM mlazarte.vof_trails"; // trails 
-//icons 
+var sqlQueryddl = "SELECT trail_id, name FROM mlazarte.vof_trails";
 
 
-
+// Icons for map points
 var iconTemp = L.Icon.extend({
-    options: {
-        iconSize: [25, 25],
-    }
+    options: {iconSize: [25, 25],}
 });
-
 var iconTemp2 = L.Icon.extend({
-    options: {
-        iconSize: [20, 20],
-    }
+    options: {iconSize: [20, 20],}
 });
-
 var campIcon = new iconTemp({
     iconUrl: 'images/campground.svg'
 });
@@ -113,14 +105,13 @@ var waterIcon = new iconTemp2({
 
 
 
-//for each point of interest 
-
+//For each point feature 
 var onEachFeature = function (feature, layer) {
     if (feature.properties) {
         var popUpContent = makePopUpContent(feature.properties);
         layer.bindPopup(popUpContent);
 }}
-// function to make our popup-content
+// For the popup-content
 var makePopUpContent = function (props) {
     return '<div class="popup-content">' +
         '<p><strong>Name:</strong> ' + props.name + '</p>' +
@@ -128,7 +119,7 @@ var makePopUpContent = function (props) {
 }
 
 
-// urls to get layer from carto
+// Carto URLs
 var callsite = "https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=";
 var url3 = callsite + sqlQuery3;
 var url4 = callsite + sqlQuery4;
@@ -161,7 +152,6 @@ var entranceStation = L.geoJson(null, {
         });
     }
 });
-
 var giftShop = L.geoJson(null, {
     onEachFeature: onEachFeature,
     pointToLayer: function (feature, latlng) {
@@ -252,7 +242,6 @@ var waterStation = L.geoJson(null, {
 });
 
 
-
 $.getJSON(url3, function (data) {
     campgrounds.addData(data);
 }).fail(function (jqxhr, textStatus, error) {
@@ -332,45 +321,6 @@ $.getJSON(url15, function (data) {
     console.log("Request Failed: " + err);
 });
 
-/* var ddlCamps = document.getElementById("ddlCamps")
-    $.get("https://mlazarte.carto.com/api/v2/sql?q=" + sqlQuery3,
-        function (data) {
-            console.log(data);
-            for (i = 0; i < data.total_rows; i++) {
-                var option1 = document.createElement("OPTION");
-                option1.innerHTML = data.rows[i].name;
-
-                //Add the Option element to DropDownList.
-                ddlCamps.options.add(option1);
-            }
-        });
-
-var ddlTheads = document.getElementById("ddlTheads")
-    $.get("https://mlazarte.carto.com/api/v2/sql?q=" + sqlQuery12,
-        function (data) {
-            console.log(data);
-            for (i = 0; i < data.total_rows; i++) {
-                var option2 = document.createElement("OPTION");
-                option2.innerHTML = data.rows[i].name;
-
-                //Add the Option element to DropDownList.
-                ddlTheads.options.add(option2);
-            }
-        });    
-
-var ddlViews = document.getElementById("ddlViews")
-    $.get("https://mlazarte.carto.com/api/v2/sql?q=" + sqlQuery13,
-        function (data) {
-            console.log(data);
-            for (i = 0; i < data.total_rows; i++) {
-                var option3 = document.createElement("OPTION");
-                option3.innerHTML = data.rows[i].name;
-
-                //Add the Option element to DropDownList.
-                ddlViews.options.add(option3);
-            }
-        }); 
-*/
 
 // Get trails selection as GeoJSON and Add to Map
 var trails = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=" + sqlQuery1, function (data) {
@@ -392,6 +342,7 @@ var trails = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q="
                 mouseout: function (e) {
                     trails.resetStyle(e.target);
                 },
+                style: styleTrails,
             });
         },
         style: styleTrails,
@@ -414,7 +365,7 @@ function styleTrails(feature) {
         "dashArray": "5 5"
     };
 }
-    
+ 
 
 function styleFilterTrails(feature) {
     return {
@@ -465,7 +416,6 @@ map.addControl(layerControl);
 
 /* GPS enabled geolocation control set to follow the user's location */
 var locateControl = L.control.locate({
-    //    position: "bottomright",
     drawCircle: true,
     follow: true,
     setView: true,
@@ -559,11 +509,11 @@ $(document).ready(function () {
         $("#reviewSection").collapse('hide');
     }
 
-    /* Highlight search box text on click */
+    // Highlight search box text on click //
     $("#searchbox").click(function () {
         $(this).select();
     });
-    /* Prevent hitting enter from refreshing the page */
+    // Prevent hitting enter from refreshing the page //
     $("#searchbox").keypress(function (e) {
         if (e.which == 13) {
             e.preventDefault();
@@ -580,6 +530,7 @@ $(document).ready(function () {
         return false;
     });
 
+    // Load Trails from Carto
     var ddlTrails = document.getElementById("ddlTrails")
     $.get("https://mlazarte.carto.com/api/v2/sql?q=" + sqlQueryddl,
         function (data) {
@@ -597,14 +548,12 @@ $(document).ready(function () {
         });
 
     $("#reviewSubmitBtn").click(function (e) {
-        e.preventDefault(); //just use when testing
+        e.preventDefault(); 
 
 
         var x = $("#review_trails_form").serializeArray();
-
         var trailVal = x[0].value;
         var trail_id_ = (trailVal * 1);
-
         var review_ = x[4].value;
         var user_date_ = x[3].value;
         var first_name_ = x[1].value;
@@ -621,48 +570,43 @@ $(document).ready(function () {
 
     });
     $("#querySubmitBtn").click(function (e) {
-        e.preventDefault(); //just use when testing
+        e.preventDefault();
         $('#trailFiltOutput').empty();
         map.removeLayer(trails);
-
-        //        map.removeLayer(filterTrails);
 
         var x = $("#query_trails_form").serializeArray();
         console.log(x);
 
         var surfaceType = x[0].value;
         console.log(surfaceType);
-        //        "WHERE trail_surf = 'surfaceType'"
+        // "WHERE trail_surf = 'surfaceType'" //
 
         var distanceRange = x[1].value;
         console.log(distanceRange);
-        //        "WHERE miles = 'distanceRange'"
+        // "WHERE miles = 'distanceRange'" //
 
         var difficult = x[2].value;
         console.log(difficult);
-        //        "WHERE difficulty = 'trail_diff'"
-
+        // "WHERE difficulty = 'trail_diff'" //
 
         var sqlFilter = "SELECT t.the_geom, t.name, t.meters, t.miles, t.trail_surf, t.trail_diff, u.first_name, u.last_name, u.trail_id, u.user_date, u.review FROM mlazarte.vof_trails AS t LEFT OUTER JOIN mlazarte.user_review AS u ON t.trail_id = u.trail_id"
 
-
-
-        // If no filters are selected
+        // If no filters are selected //
         if (surfaceType == ""  && distanceRange ==  "" && difficult == "") {
             var sql = sqlFilter;
         }
 
-        // If at least one filter is selected
+        // If at least one filter is selected //
         else {
-            // Add WHERE clause root
+            // Add WHERE clause root //
             var sql = sqlFilter + " WHERE ";
-            // If surface type is not null, add surfaceType to WHERE clause
+            // If surface type is not null, add surfaceType to WHERE clause //
             if (surfaceType != "") {
                 var where_surface = "t.trail_surf = '" + surfaceType + "'";
                 sql += where_surface;
             }
 
-            // If distanceRange is not null, add distanceRange to WHERE clause
+            // If distanceRange is not null, add distanceRange to WHERE clause //
             if (distanceRange != "") {
                 var where_dist = "t.miles " + distanceRange;
                 if (surfaceType != "" ||  difficult != "") {
@@ -672,7 +616,7 @@ $(document).ready(function () {
                 }
             }
 
-            // If difficulty is not null, add difficulty to WHERE clause
+            // If difficulty is not null, add difficulty to WHERE clause //
             if (difficult != "") {
                 var where_diff = "t.trail_diff = '" + difficult + "'";
                 if (surfaceType != "" ||  distanceRange != "" ) {
@@ -684,6 +628,8 @@ $(document).ready(function () {
         }
         console.log(sql);
 
+
+        // Filter trails by dropdown selection //
         var filterTrails = $.getJSON("https://mlazarte.carto.com/api/v2/sql?format=GeoJSON&q=" + sql, function (data) {
             trails = L.geoJson(data, {
                 onEachFeature: function (feature, layer) {
@@ -708,14 +654,14 @@ $(document).ready(function () {
 
                     });
                 },
-                style: styleFilterTrails,
+                style: styleTrails,
             }).addTo(map);
         });
 
     });
 
 
-    // Leaflet patch to make layer control scrollable on touch browsers
+    // Leaflet Patch for browsers //
     var container = $(".leaflet-control-layers")[0];
     if (!L.Browser.touch) {
         L.DomEvent
@@ -742,7 +688,7 @@ $(function getLocation() {
     }
   });
   
-  //function for getting temperature of specified location
+  // Get current temperature for location of user //
   function getTemperature(lng, lat){
           // console.log(locationCoords)
         //get weather for current location from weather.gov api
