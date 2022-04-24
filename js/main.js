@@ -13,7 +13,6 @@ var outdoors = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/outdoors-v11
 });
 
 
-
 var mapOptions = {
     zoomControl: false,
     center: [36.456, -114.533],
@@ -687,6 +686,8 @@ $(function getLocation() {
       });
     }
   });
+
+
   
   // Get current temperature for location of user //
   function getTemperature(lng, lat){
@@ -711,3 +712,16 @@ $(function getLocation() {
   }
   
   var isWeather = false;
+
+  window.addEventListener("load", function(){
+    setTimeout(
+        function open(event){
+            document.querySelector(".welcome_popup").style.display = "block";
+        },
+        2000 
+    )
+});
+
+document.querySelector("#close").addEventListener("click", function(){
+    document.querySelector(".welcome_popup").style.display = "none";
+});
