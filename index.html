@@ -5,7 +5,6 @@
     <title>Valley of Fire State Park</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title></title>
 
     <!--Carto CSS-->
     <link rel="stylesheet" href="https://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
@@ -28,6 +27,16 @@
     <link rel="stylesheet" href="lib/leaflet-sidebar-v2/css/leaflet-sidebar.css" />
     <link rel="stylesheet" href="css/leaflet.css">
     <link rel="stylesheet" href="css/style.css">
+
+    
+    <div class="welcome_popup">
+        <button id="close">&times;</button>
+            <h2>Welcome to the Valley of Fire State Park</h2>
+            <p>World-renowned for its 40,000 acres of bright red Aztec sandstone outcrops nestled in gray and tan limestone,
+            Valley of Fire State Park contains ancient, petrified trees and petroglyphs dating back more than 2,000 years.</p>
+            <p>For more information, please visit the official page, Valley of Fire State parks. Click on the logo below.</p>
+            <a href="http://parks.nv.gov/parks/valley-of-fire"> <img src ="images/nvsp150.png"alt=""></a></div>
+    </div>  
 
 </head>
 
@@ -109,24 +118,20 @@
                     </ul>
                 </li>
 
-            <!--    <li class="active">
-                    <a href="#homeAbout" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Points of Interest</a>
+                <li class="active">
+                    <a href="#homeAbout" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Trail Legend</a>
                     <ul class="collapse list-unstyled" id="homeAbout">
                         <li>
-                    <form id="select_form"><br>
-                    <div><label><b>Trailhead:</b></label>
-                        <select id="ddlTheads" class="selectform" name="poitype">
-                            </select></div>
-                    <div><label><b>Campground:</b></label>
-                        <select id="ddlCamps" class="selectform" name="poitype">
-                            </select></div>
-                    <div><label><b>Viewpoint:</b></label>
-                        <select id="ddlViews" class="selectform" name="poitype">
-                            </select></div>
-                            <br>              
+                            <br>
+                    <div><label><b>Green = Easy</b></label></div>
+                    <br>
+                    <div><label><b>Yellow = Intermediate</b></label></div>
+                    <br>
+                    <div><label><b>Red = Hard</b></label></div>
+                    <br>              
                       </li>
                     </ul>
-                </li> -->
+                </li>
 
             <ul class="list-unstyled CTAs">
                 <li>
@@ -145,12 +150,14 @@
                 
             </li></ul>
         </nav>
-
+       
         <!-- Page Content  -->
         <div id="content">
             <div id="mapid"></div>
         </div>
-    </div>
+
+        </div>
+
 
     
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
